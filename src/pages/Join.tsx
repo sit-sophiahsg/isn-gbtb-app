@@ -1,8 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Emblem } from '../components/Emblem'
-import { api } from '../lib/api'
-import { DEMO_EVENT_CODE, DEMO_STUDENT } from '../lib/api/demo'
 import { COUNTRIES } from '../lib/countries'
 import { lastEventCode, rememberEventCode } from '../lib/eventCode'
 import { cleanFirstName, isValidStudentId } from '../lib/validation'
@@ -12,7 +10,7 @@ export function Join() {
   const { join } = useSession()
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  const codeFromLink = (params.get('code') ?? '').trim().toUpperCase() || lastEventCode() || (api.demo ? DEMO_EVENT_CODE : '')
+  const codeFromLink = (params.get('code') ?? '').trim().toUpperCase() || lastEventCode()
 
   const [eventCode, setEventCode] = useState(codeFromLink)
   const [editCode, setEditCode] = useState(!codeFromLink)
@@ -197,28 +195,6 @@ export function Join() {
             {busy ? 'Opening…' : 'Open my passport'}
           </button>
 
-          {api.demo && (
-            <div className="rounded-xl border border-dashed border-rule p-4 text-sm text-ink-soft">
-              <p>
-                <strong>Demo mode.</strong> Event code <span className="font-mono">{DEMO_EVENT_CODE}</span>. Use any 7-digit
-                student ID to start a new passport, or open the sample passport with all 5 stamps.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setEventCode(DEMO_EVENT_CODE)
-                  setStudentId(DEMO_STUDENT.studentId)
-                  setFirstName(DEMO_STUDENT.firstName)
-                  setCountry('Brazil')
-                  setConsent(true)
-                  setEditCode(false)
-                }}
-                className="mt-2 min-h-11 font-semibold text-accent underline"
-              >
-                Fill in the sample passport ({DEMO_STUDENT.studentId}, {DEMO_STUDENT.firstName})
-              </button>
-            </div>
-          )}
         </div>
       </form>
     </main>
