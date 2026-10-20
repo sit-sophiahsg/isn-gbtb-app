@@ -12,7 +12,7 @@ interface SessionValue {
   reload(): Promise<void>
   join(input: JoinInput): Promise<JoinResult>
   saveSubmission(input: SaveInput): Promise<void>
-  leave(): void
+  leave(): Promise<void>
 }
 
 const SESSION_KEY = 'postcards:session'
@@ -51,9 +51,21 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(!!saved)
   const [loadError, setLoadError] = useState(false)
 
+  const clear = useCallback(() => {
+    writeSaved(null)
+    setStudent(null)
+    setEvent(null)
+    setSubs([])
+  }, [])
+
   const load = useCallback(async (s: Student, eventId: string) => {
     setLoadError(false)
     try {
+      if (!(await api.isLinked(s))) {
+        // Login was lost (e.g. browser data cleared): send them back to enter their student ID again.
+        clear()
+        return
+      }
       const [fresh, list] = await Promise.all([api.fetchEvent(eventId), api.fetchSubmissions(s)])
       setSubs(list)
       if (fresh) {
@@ -65,7 +77,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [clear])
 
   useEffect(() => {
     if (saved) void load(saved.student, saved.event.id)
@@ -100,12 +112,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     [student],
   )
 
-  const leave = useCallback(() => {
-    writeSaved(null)
-    setStudent(null)
-    setEvent(null)
-    setSubs([])
-  }, [])
+  const leave = useCallback(async () => {
+    // Sign out first, so a new student logging in on this phone gets a fresh login.
+    await api.logout()
+    clear()
+  }, [clear])
 
   const submissions = useMemo(() => Object.fromEntries(subs.map((s) => [s.stampKey, s])), [subs])
 

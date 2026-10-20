@@ -111,7 +111,7 @@ export function Passport() {
                 <button onClick={() => setConfirmLeave(false)} className="min-h-12 rounded-xl border border-rule px-5 font-semibold">
                   Cancel
                 </button>
-                <button onClick={leave} className="min-h-12 rounded-xl bg-accent px-5 font-semibold text-white dark:text-paper">
+                <button onClick={() => void leave()} className="min-h-12 rounded-xl bg-accent px-5 font-semibold text-white dark:text-paper">
                   Log out
                 </button>
               </div>

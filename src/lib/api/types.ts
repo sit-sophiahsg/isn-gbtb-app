@@ -19,7 +19,10 @@ export interface Api {
   joinEvent(input: JoinInput): Promise<JoinResult>
   /** Latest event details (organisers can edit the seasonal stamp in Supabase). */
   fetchEvent(eventId: string): Promise<EventInfo | null>
+  /** False if this browser is no longer logged in as the student (e.g. site data was cleared). */
+  isLinked(student: Student): Promise<boolean>
   fetchSubmissions(student: Student): Promise<Submission[]>
   /** Save one stamp. Throws if the upload fails, so the screen can offer "Try again". */
   saveSubmission(student: Student, input: SaveInput): Promise<Submission>
+  logout(): Promise<void>
 }

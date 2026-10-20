@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { Join } from './pages/Join'
 import { Passport } from './pages/Passport'
 import { StampActivity } from './pages/StampActivity'
+import { supabaseConfigured } from './lib/supabase'
 import { SessionProvider, useSession } from './state/session'
 
 function RequireStudent({ children }: { children: ReactNode }) {
@@ -30,7 +31,22 @@ function Splash() {
   return <div className="min-h-dvh bg-cover" aria-busy="true" />
 }
 
+function SetupNeeded() {
+  return (
+    <main className="paper flex min-h-dvh items-center justify-center p-6">
+      <div className="max-w-md space-y-3 rounded-2xl border border-rule bg-paper p-6">
+        <h1 className="font-serif text-2xl">Almost there</h1>
+        <p>
+          This site isn't connected to its database yet. Add <code className="font-mono">VITE_SUPABASE_URL</code> and{' '}
+          <code className="font-mono">VITE_SUPABASE_ANON_KEY</code> as environment variables (see the README), then redeploy.
+        </p>
+      </div>
+    </main>
+  )
+}
+
 export default function App() {
+  if (!supabaseConfigured) return <SetupNeeded />
   return (
     <SessionProvider>
       <BrowserRouter>
