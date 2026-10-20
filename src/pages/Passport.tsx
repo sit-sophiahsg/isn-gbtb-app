@@ -91,13 +91,36 @@ export function Passport() {
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-rule bg-paper-2/70 p-5">
+        <section className={`rounded-2xl border p-5 ${allDone ? 'border-gold bg-gold/10' : 'border-rule bg-paper-2/70'}`}>
           <h2 className="font-serif text-xl">{allDone ? 'Postcard unlocked!' : 'Postcard maker'}</h2>
           <p className="mt-1 text-ink-soft">
             {allDone
-              ? "You've collected every stamp. The postcard maker arrives in M3."
-              : `Collect all ${stamps.length} stamps to turn your favourite moment into a postcard to send home.`}
+              ? 'Turn your favourite moment into a postcard to send to family and friends.'
+              : `Collect all ${stamps.length} stamps to unlock a postcard you can send home. ${stamps.length - collected} to go!`}
           </p>
+          {allDone && (
+            <Link to="/postcard" className="btn-primary mt-4 flex min-h-14 items-center justify-center rounded-2xl text-lg font-semibold shadow-md">
+              Make my postcard
+            </Link>
+          )}
+        </section>
+
+        <section className="rounded-2xl border border-rule bg-paper-2/70 p-5">
+          <h2 className="font-serif text-xl">Plant a flower</h2>
+          <p className="mt-1 text-ink-soft">
+            Draw a flower that represents you, your culture or your time in Singapore, and plant it in the shared garden.
+          </p>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <Link to="/plant" className="btn-primary flex min-h-13 items-center justify-center rounded-xl px-3 text-center font-semibold">
+              Draw my flower
+            </Link>
+            <Link
+              to="/garden"
+              className="flex min-h-13 items-center justify-center rounded-xl border-2 border-cover px-3 text-center font-semibold text-cover dark:border-gold dark:text-gold"
+            >
+              See the garden
+            </Link>
+          </div>
         </section>
 
         <section className="pt-2 text-center text-sm text-ink-soft">

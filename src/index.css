@@ -175,3 +175,78 @@ body {
     color: var(--cover-deep);
   }
 }
+
+/* Garden scene colours */
+:root {
+  --g-sky-top: #e9f4f1;
+  --g-sky-bottom: #fdf6e3;
+  --g-rib: rgba(120, 150, 140, 0.35);
+  --g-hill-back: #b9d7a8;
+  --g-hill-0: #9cc98a;
+  --g-hill-1: #7db86c;
+  --g-hill-2: #5ea152;
+  --g-hill-3: #4a8b43;
+  --g-stem: #3f7d3a;
+  --g-leaf: #5aa04f;
+  --g-tree: #1f6b45;
+  --g-trunk: #7a4a2a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --g-sky-top: #0f1a2b;
+    --g-sky-bottom: #1d2b3a;
+    --g-rib: rgba(200, 220, 255, 0.18);
+    --g-hill-back: #1e3a2b;
+    --g-hill-0: #24452f;
+    --g-hill-1: #2a5236;
+    --g-hill-2: #2f5e3c;
+    --g-hill-3: #346a42;
+    --g-stem: #6fb26a;
+    --g-leaf: #7fc77a;
+    --g-tree: #2f8a5c;
+    --g-trunk: #9a6a48;
+  }
+}
+
+.garden-sway {
+  transform-box: view-box;
+  animation: garden-sway 6s ease-in-out infinite alternate;
+}
+@keyframes garden-sway {
+  from {
+    transform: rotate(-2.4deg);
+  }
+  to {
+    transform: rotate(2.4deg);
+  }
+}
+
+.garden-grow {
+  transform-box: view-box;
+  animation: garden-grow 1.6s cubic-bezier(0.2, 0.8, 0.3, 1.15) both;
+}
+@keyframes garden-grow {
+  from {
+    transform: scale(0.2, 0);
+  }
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+.garden-pulse {
+  animation: garden-pulse 1.4s ease-in-out infinite;
+}
+@keyframes garden-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-sway,
+  .garden-grow,
+  .garden-pulse {
+    animation: none !important;
+  }
+}

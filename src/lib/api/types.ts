@@ -1,4 +1,4 @@
-import type { EventInfo, JoinResult, StampKey, Student, Submission } from '../types'
+import type { AdminRow, EventInfo, GardenFlower, JoinResult, StampKey, Student, Submission } from '../types'
 
 export interface JoinInput {
   eventCode: string
@@ -14,8 +14,17 @@ export interface SaveInput {
   reflection: string
 }
 
-/** Everything the app needs from the backend. */
+export interface PlantInput {
+  /** Transparent PNG of the bloom. */
+  image: Blob
+  flowerName: string
+  meaning: string
+}
+
+/** Everything the app needs from the backend: Supabase in production, an in-browser demo otherwise. */
 export interface Api {
+  readonly demo: boolean
+
   joinEvent(input: JoinInput): Promise<JoinResult>
   /** Latest event details (organisers can edit the seasonal stamp in Supabase). */
   fetchEvent(eventId: string): Promise<EventInfo | null>
@@ -25,4 +34,19 @@ export interface Api {
   /** Save one stamp. Throws if the upload fails, so the screen can offer "Try again". */
   saveSubmission(student: Student, input: SaveInput): Promise<Submission>
   logout(): Promise<void>
+
+  recordPostcard(student: Student, submissionId: string): Promise<void>
+  fetchMyFlower(student: Student): Promise<GardenFlower | null>
+  /** Plant (or replant) this student's one flower. Throws on failure. */
+  plantFlower(student: Student, input: PlantInput): Promise<GardenFlower>
+  /** Visible flowers for the garden; null if the event code doesn't exist. */
+  fetchGarden(eventCode: string): Promise<GardenFlower[] | null>
+
+  /** Returns the event id if the passcode is right, otherwise null. */
+  adminLogin(eventCode: string, passcode: string): Promise<string | null>
+  adminIsLoggedIn(eventId: string): Promise<boolean>
+  adminProgress(eventId: string): Promise<AdminRow[]>
+  adminSetFlowerHidden(flowerId: string, hidden: boolean): Promise<void>
+  /** Deletes every student, stamp, photo, postcard record and flower for the event. */
+  adminDeleteAll(eventId: string): Promise<void>
 }

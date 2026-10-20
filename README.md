@@ -2,7 +2,31 @@
 
 A passport-style website for the Gardens by the Bay Flower Dome student event (Christmas Train Show, late Nov / early Dec 2026). Students log in with their student ID, collect 5 stamps with photos and reflections, make a postcard to send home, and plant a flower in a shared garden.
 
-**Status:** Milestone 2. Login, passport and stamps are saved to Supabase. The postcard (M3), flower garden (M4) and admin page (M5) are still to come.
+**Status:** feature-complete (M1–M5). Without Supabase keys it runs in **demo mode** with sample data, so you can click through every screen before setting anything up.
+
+| Page | Who it's for |
+|---|---|
+| `/` | Students: log in with student ID, then the passport and 5 stamps |
+| `/postcard` | Students: unlocked after all 5 stamps |
+| `/plant` | Students: draw and plant a flower |
+| `/garden` | Everyone: the shared garden (garden and cards views). Open it on a laptop or TV, click **Full screen**, and it refreshes itself every 15 seconds |
+| `/admin` | Organisers: passcode, progress table, hide/unhide flowers, delete all event data |
+
+## Try the demo (no setup needed)
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. A yellow **Demo mode** strip shows at the top. Everything is stored in your browser only.
+
+- **Student:** press **Fill in the sample passport** on the login screen to open Lucas's passport (student ID `2500002`) with all 5 stamps. Or use any other 7-digit ID to start a fresh one.
+- **Garden:** http://localhost:5173/garden has 12 sample flowers.
+- **Admin:** http://localhost:5173/admin with event code `GBTB26` and passcode `demo`.
+- **Start over:** press **Reset** in the Demo mode strip.
+
+Demo mode switches off automatically as soon as the two Supabase environment variables are set.
 
 ---
 
@@ -98,7 +122,8 @@ https://YOUR-SITE.vercel.app/?code=GBTB26
 ## Before the event
 
 - **⚠️ Supabase free projects pause after 7 days without activity.** A paused project means students can't log in. **In the 3 days before the event, open the Supabase dashboard (this wakes the project if it's paused) and run a full rehearsal on the live site:** log in, collect all 5 stamps, make a postcard and plant a flower.
-- Log in on the live site with a test student ID during the rehearsal, then delete that data afterwards (the admin page arrives in M5).
+- Use test student IDs during the rehearsal, then clear them with **Delete all event data** on `/admin` before the real event.
+- Open `/garden` on the laptop you'll connect to the projector, click **Full screen**, and check it's readable from the back of the room.
 
 ## Changing things during the event
 
@@ -111,12 +136,14 @@ https://YOUR-SITE.vercel.app/?code=GBTB26
 
 Students see the change the next time they open or refresh the page.
 
+**Hiding a flower:** go to `/admin`, log in with the event code and passcode, and press **Hide** next to it. It disappears from the garden within 15 seconds. **Unhide** brings it back.
+
 **Helping a student who can't get back in:** they need the **same student ID and first name** they used the first time. Capitals, spaces and accents don't matter, but spelling does. To check what they typed, open Supabase → **Table Editor → students** and search for their student ID.
 
 ## After the event
 
 - **Export for the report:** Supabase → **Table Editor → submissions** (and **students**) → **Export → Export table as CSV**. Download photos from **Storage → photos** if you need them for social media.
-- **Delete all event data,** including student IDs, from the admin page (arrives in M5). This is required for PDPA compliance.
+- **Delete all event data**, including student IDs: on `/admin`, press **Delete all event data…**, type `DELETE` and confirm. This removes every student, stamp, photo, postcard record and flower. It's required for PDPA compliance. The event and your passcode are kept, so you can reuse them for a rehearsal.
 
 ---
 
@@ -126,7 +153,7 @@ Requires [Node.js](https://nodejs.org) 20+.
 
 ```bash
 npm install
-cp .env.example .env.local   # then fill in your Supabase URL and key
+cp .env.example .env.local   # fill in your Supabase URL and key (skip this to use demo mode)
 npm run dev
 ```
 

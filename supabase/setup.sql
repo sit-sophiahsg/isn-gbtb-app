@@ -211,10 +211,13 @@ begin
   return v_event_id;
 end $$;
 
-create or replace function public.admin_progress(p_event_id uuid)
+-- Dropped first because its columns changed during development (create or replace can't change them).
+drop function if exists public.admin_progress(uuid);
+create function public.admin_progress(p_event_id uuid)
 returns table (
   student_row_id uuid, student_id text, first_name text, country text, stamps int,
-  postcard_made boolean, flower_id uuid, flower_name text, flower_hidden boolean, joined_at timestamptz
+  postcard_made boolean, flower_id uuid, flower_name text, flower_hidden boolean, flower_image_path text,
+  joined_at timestamptz
 ) language plpgsql stable security definer set search_path = '' as $$
 begin
   if not public.is_admin(p_event_id) then
@@ -224,7 +227,7 @@ begin
   select s.id, s.student_id, s.first_name, s.country,
     (select count(*)::int from public.submissions x where x.student_id = s.id),
     exists (select 1 from public.postcards p where p.student_id = s.id),
-    f.id, f.flower_name, f.hidden, s.created_at
+    f.id, f.flower_name, f.hidden, f.image_path, s.created_at
   from public.students s
   left join public.flowers f on f.student_id = s.id
   where s.event_id = p_event_id
@@ -285,6 +288,7 @@ revoke all on function public.set_admin_passcode(text, text) from public, anon, 
 revoke all on function public.flowers_fill_owner() from public, anon, authenticated;
 grant execute on function public.join_event(text, text, text, text) to authenticated;
 grant execute on function public.admin_login(text, text) to authenticated;
+grant execute on function public.is_admin(uuid) to authenticated;
 grant execute on function public.admin_progress(uuid) to authenticated;
 grant execute on function public.admin_set_flower_hidden(uuid, boolean) to authenticated;
 grant execute on function public.admin_delete_event_data(uuid) to authenticated;

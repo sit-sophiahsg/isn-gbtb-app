@@ -32,3 +32,26 @@ export interface Submission {
 export type JoinResult =
   | { ok: true; event: EventInfo; student: Student; rejoined: boolean }
   | { ok: false; reason: 'bad_event' | 'name_mismatch' | 'network' }
+
+export interface GardenFlower {
+  id: string
+  imageUrl: string
+  flowerName: string
+  meaning: string
+  firstName: string
+  country: string
+  createdAt: string
+}
+
+export interface AdminRow {
+  studentRowId: string
+  studentId: string
+  firstName: string
+  country: string
+  stamps: number
+  postcardMade: boolean
+  flowerId: string | null
+  flowerName: string | null
+  flowerHidden: boolean | null
+  flowerImageUrl: string | null
+}
