@@ -1,0 +1,177 @@
+@import 'tailwindcss';
+
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+:root {
+  --paper: #f8f3e6;
+  --paper-2: #efe6d0;
+  --ink: #22251f;
+  --ink-soft: #5a574b;
+  --rule: #d9cfb6;
+  --cover: #1d4a34;
+  --cover-deep: #133523;
+  --gold: #c9a24a;
+  --gold-soft: #e9d49a;
+  --accent: #b8326f;
+  --ok: #1e6b43;
+  --warn: #8a5a00;
+  --guilloche: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%231d4a34' stroke-opacity='0.07' stroke-width='0.7'%3E%3Ccircle cx='60' cy='60' r='44'/%3E%3Ccircle cx='0' cy='0' r='44'/%3E%3Ccircle cx='120' cy='0' r='44'/%3E%3Ccircle cx='0' cy='120' r='44'/%3E%3Ccircle cx='120' cy='120' r='44'/%3E%3Cellipse cx='60' cy='60' rx='58' ry='22'/%3E%3Cellipse cx='60' cy='60' rx='22' ry='58'/%3E%3Cellipse cx='60' cy='0' rx='58' ry='22'/%3E%3Cellipse cx='60' cy='120' rx='58' ry='22'/%3E%3Cellipse cx='0' cy='60' rx='22' ry='58'/%3E%3Cellipse cx='120' cy='60' rx='22' ry='58'/%3E%3C/g%3E%3C/svg%3E");
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1d211c;
+    --paper-2: #262b24;
+    --ink: #eee7d4;
+    --ink-soft: #b9b19c;
+    --rule: #3c4238;
+    --cover: #173d2a;
+    --cover-deep: #0d2618;
+    --gold: #d9b65e;
+    --gold-soft: #8a7440;
+    --accent: #f07fb0;
+    --ok: #7fcf9c;
+    --warn: #e9c46a;
+    --guilloche: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23e9d49a' stroke-opacity='0.05' stroke-width='0.7'%3E%3Ccircle cx='60' cy='60' r='44'/%3E%3Ccircle cx='0' cy='0' r='44'/%3E%3Ccircle cx='120' cy='0' r='44'/%3E%3Ccircle cx='0' cy='120' r='44'/%3E%3Ccircle cx='120' cy='120' r='44'/%3E%3Cellipse cx='60' cy='60' rx='58' ry='22'/%3E%3Cellipse cx='60' cy='60' rx='22' ry='58'/%3E%3Cellipse cx='60' cy='0' rx='58' ry='22'/%3E%3Cellipse cx='60' cy='120' rx='58' ry='22'/%3E%3Cellipse cx='0' cy='60' rx='22' ry='58'/%3E%3Cellipse cx='120' cy='60' rx='22' ry='58'/%3E%3C/g%3E%3C/svg%3E");
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-cover: var(--cover);
+  --color-cover-deep: var(--cover-deep);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-accent: var(--accent);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --font-serif: 'Young Serif', Georgia, serif;
+  --font-sans: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, Menlo, monospace;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+}
+
+html {
+  background: var(--cover-deep);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.paper {
+  background-color: var(--paper);
+  background-image: var(--guilloche);
+}
+
+/* Stamp ink: one colour per stamp, lighter variant in dark mode. */
+.stamp {
+  color: var(--stamp-ink);
+}
+@media (prefers-color-scheme: dark) {
+  .stamp {
+    color: var(--stamp-ink-dark);
+  }
+}
+
+.stamp-press {
+  animation: stamp-press 650ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+@keyframes stamp-press {
+  0% {
+    transform: scale(1.9) rotate(calc(var(--tilt) - 14deg));
+    opacity: 0;
+  }
+  55% {
+    transform: scale(0.93) rotate(var(--tilt));
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1.03) rotate(var(--tilt));
+  }
+  100% {
+    transform: scale(1) rotate(var(--tilt));
+    opacity: 1;
+  }
+}
+
+.ink-splash {
+  animation: ink-splash 700ms ease-out 330ms both;
+}
+@keyframes ink-splash {
+  from {
+    transform: scale(0.6);
+    opacity: 0.45;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.fade-up {
+  animation: fade-up 400ms ease-out both;
+}
+@keyframes fade-up {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Machine-readable zone: always exactly 44 characters wide, whatever the screen size. */
+.mrz-wrap {
+  container-type: inline-size;
+}
+.mrz {
+  font-family: var(--font-mono);
+  font-size: calc(100cqw / 44 / 0.6);
+  line-height: 1.35;
+  letter-spacing: 0;
+  white-space: pre;
+  overflow: hidden;
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--cover);
+  color: var(--gold);
+}
+@media (prefers-color-scheme: dark) {
+  .btn-primary {
+    background: var(--gold);
+    color: var(--cover-deep);
+  }
+}
