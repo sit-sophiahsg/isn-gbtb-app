@@ -96,6 +96,8 @@ async function listEventFiles(bucket: string, eventId: string): Promise<string[]
 }
 
 export const supabaseApi: Api = {
+  demo: false,
+
   async joinEvent(input: JoinInput): Promise<JoinResult> {
     try {
       await ensureSignedIn()

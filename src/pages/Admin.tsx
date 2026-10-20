@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
+import { DEMO_ADMIN_PASSCODE, DEMO_EVENT_CODE } from '../lib/api/demo'
 import { lastEventCode } from '../lib/eventCode'
 import type { AdminRow } from '../lib/types'
 
@@ -68,7 +69,7 @@ export function Admin() {
 }
 
 function Login({ onLogin }: { onLogin(s: AdminSession): void }) {
-  const [code, setCode] = useState(lastEventCode())
+  const [code, setCode] = useState(lastEventCode() || (api.demo ? DEMO_EVENT_CODE : ''))
   const [passcode, setPasscode] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -128,6 +129,11 @@ function Login({ onLogin }: { onLogin(s: AdminSession): void }) {
         <button disabled={busy} className="btn-primary min-h-13 w-full rounded-xl text-lg font-semibold disabled:opacity-60">
           {busy ? 'Checking…' : 'Log in'}
         </button>
+        {api.demo && (
+          <p className="rounded-xl border border-dashed border-rule p-3 text-sm text-ink-soft">
+            Demo passcode: <span className="font-mono font-bold">{DEMO_ADMIN_PASSCODE}</span>
+          </p>
+        )}
       </form>
     </main>
   )

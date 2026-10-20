@@ -2,7 +2,7 @@
 
 A passport-style website for the Gardens by the Bay Flower Dome student event (Christmas Train Show, late Nov / early Dec 2026). Students log in with their student ID, collect 5 stamps with photos and reflections, make a postcard to send home, and plant a flower in a shared garden.
 
-**Status:** feature-complete (M1–M5). It needs a Supabase project to run: until the two environment variables are set, the site shows a "not connected yet" message. Follow the setup steps below.
+**Status:** feature-complete (M1–M5). Without Supabase keys it runs in **demo mode** with sample data, so you can click through every screen before setting anything up.
 
 | Page | Who it's for |
 |---|---|
@@ -11,6 +11,22 @@ A passport-style website for the Gardens by the Bay Flower Dome student event (C
 | `/plant` | Students: draw and plant a flower |
 | `/garden` | Everyone: the shared garden (garden and cards views). Open it on a laptop or TV, click **Full screen**, and it refreshes itself every 15 seconds |
 | `/admin` | Organisers: passcode, progress table, hide/unhide flowers, delete all event data |
+
+## Try the demo (no setup needed)
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. A yellow **Demo mode** strip shows at the top. Everything is stored in your browser only.
+
+- **Student:** press **Fill in the sample passport** on the login screen to open Lucas's passport (student ID `2500002`) with all 5 stamps. Or use any other 7-digit ID to start a fresh one.
+- **Garden:** http://localhost:5173/garden has 12 sample flowers.
+- **Admin:** http://localhost:5173/admin with event code `GBTB26` and passcode `demo`.
+- **Start over:** press **Reset** in the Demo mode strip.
+
+Demo mode switches off automatically as soon as the two Supabase environment variables are set.
 
 ---
 
@@ -137,7 +153,7 @@ Requires [Node.js](https://nodejs.org) 20+.
 
 ```bash
 npm install
-cp .env.example .env.local   # then fill in your Supabase URL and key
+cp .env.example .env.local   # fill in your Supabase URL and key (skip this to use demo mode)
 npm run dev
 ```
 

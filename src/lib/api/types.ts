@@ -21,8 +21,10 @@ export interface PlantInput {
   meaning: string
 }
 
-/** Everything the app needs from the backend (Supabase). */
+/** Everything the app needs from the backend: Supabase in production, an in-browser demo otherwise. */
 export interface Api {
+  readonly demo: boolean
+
   joinEvent(input: JoinInput): Promise<JoinResult>
   /** Latest event details (organisers can edit the seasonal stamp in Supabase). */
   fetchEvent(eventId: string): Promise<EventInfo | null>

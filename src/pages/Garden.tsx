@@ -12,7 +12,7 @@ export function Garden() {
   const { event, student } = useSession()
   const [params, setParams] = useSearchParams()
   const newId = params.get('new')
-  const code = (params.get('code') || event?.code || lastEventCode()).toUpperCase()
+  const code = (params.get('code') || event?.code || lastEventCode() || (api.demo ? 'GBTB26' : '')).toUpperCase()
 
   const [flowers, setFlowers] = useState<GardenFlower[] | null>(null)
   const [notFound, setNotFound] = useState(false)
