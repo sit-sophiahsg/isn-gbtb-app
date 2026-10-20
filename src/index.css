@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* Botanical palette, tuned for outdoor readability: dark text on light
+   surfaces, strong contrast on every interactive element. */
+@theme {
+  --color-leaf-50: #f2f8ee;
+  --color-leaf-100: #e0efd6;
+  --color-leaf-200: #c2e0ae;
+  --color-leaf-500: #3f8f4f;
+  --color-leaf-600: #2e7a40;
+  --color-leaf-700: #1f5f3a;
+  --color-leaf-800: #174a2d;
+  --color-leaf-900: #0f3320;
+  --color-cream: #f6f8ef;
+  --color-petal: #e8557a;
+  --color-sun: #f4c542;
+  --color-ink: #13261a;
+  --font-sans: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-cream text-ink antialiased;
+    font-size: 17px;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+  input, textarea, select { font-size: 17px; } /* stops iOS zooming on focus */
+}
+
+/* Reusable component classes (as utilities so they can @apply each other). */
+@utility btn {
+  @apply inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-5 text-lg font-bold
+    transition active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100;
+}
+@utility btn-primary { @apply btn bg-leaf-700 text-white shadow-md shadow-leaf-900/20 active:bg-leaf-800; }
+@utility btn-secondary { @apply btn border-2 border-leaf-700 bg-white text-leaf-800 active:bg-leaf-50; }
+@utility btn-ghost { @apply btn min-h-12 text-leaf-800 underline underline-offset-4; }
+@utility card { @apply rounded-3xl bg-white p-5 shadow-sm ring-1 ring-leaf-900/10; }
+@utility field {
+  @apply min-h-14 w-full rounded-2xl border-2 border-leaf-200 bg-white px-4 text-lg
+    outline-none focus:border-leaf-600;
+}
+@utility label { @apply mb-1 block text-sm font-bold tracking-wide text-leaf-800 uppercase; }
+@utility page { @apply mx-auto w-full max-w-lg px-4 pt-4 pb-28; }
+
+@keyframes stamp-in {
+  0% { transform: scale(2.2) rotate(-18deg); opacity: 0; }
+  60% { transform: scale(0.92) rotate(-8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-8deg); }
+}
+.stamp-in { animation: stamp-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .print-page { break-after: page; }
+}
