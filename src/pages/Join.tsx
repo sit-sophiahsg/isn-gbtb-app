@@ -1,7 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Emblem } from '../components/Emblem'
-import { api } from '../lib/api'
 import { COUNTRIES } from '../lib/countries'
 import { cleanFirstName, isValidStudentId } from '../lib/validation'
 import { useSession } from '../state/session'
@@ -50,14 +49,13 @@ export function Join() {
       setError(
         {
           bad_event: "We couldn't find that event code. Check the code on the poster or QR sign.",
-          name_mismatch: `This student ID is already registered with a different first name. If it's yours, type your first name the way you did the first time. ${result.attemptsLeft} ${result.attemptsLeft === 1 ? 'try' : 'tries'} left.`,
-          locked: `Too many tries for this student ID. Please wait ${Math.ceil((result.retryAfterSeconds ?? 300) / 60)} minutes, or ask an organiser for help.`,
-          offline:
-            'You need signal to open your passport the first time. Try near the entrance; after that, the app works without signal.',
+          name_mismatch:
+            "This student ID is already registered with a different first name. If it's yours, type your first name the way you did the first time, or ask an organiser for help.",
+          network: "Couldn't connect. Check your mobile data and try again.",
         }[result.reason],
       )
     } catch {
-      setError('Something went wrong. Please try again.')
+      setError("Couldn't connect. Check your mobile data and try again.")
     } finally {
       setBusy(false)
     }
@@ -199,14 +197,6 @@ export function Join() {
           >
             {busy ? 'Opening…' : 'Open my passport'}
           </button>
-
-          {api.demo && (
-            <p className="rounded-xl border border-dashed border-rule p-3 text-sm text-ink-soft">
-              <strong>Demo mode:</strong> data stays on this phone. Event code <span className="font-mono">GBTB26</span>. To
-              test rejoining, use student ID <span className="font-mono">2500002</span> with first name Lucas (all 5 stamps)
-              or <span className="font-mono">2500001</span> with Aisha (2 stamps).
-            </p>
-          )}
         </div>
       </form>
     </main>

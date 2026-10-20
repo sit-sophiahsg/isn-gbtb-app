@@ -2,16 +2,15 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { PhotoPage } from '../components/PhotoPage'
 import { Stamp } from '../components/Stamp'
-import { SyncPill } from '../components/SyncPill'
-import { api } from '../lib/api'
 import { getStamps } from '../lib/stamps'
 import { useSession } from '../state/session'
 
 export function Passport() {
-  const { event, student, submissions, leave } = useSession()
+  const { event, student, submissions, loadError, reload, leave } = useSession()
   const location = useLocation()
   const welcome = (location.state as { welcome?: 'new' | 'back' } | null)?.welcome
   const [confirmLeave, setConfirmLeave] = useState(false)
+  const [retrying, setRetrying] = useState(false)
 
   if (!event || !student) return null
   const stamps = getStamps(event)
@@ -21,14 +20,9 @@ export function Passport() {
   return (
     <main className="paper min-h-dvh pb-[max(2rem,env(safe-area-inset-bottom))]">
       <header className="bg-cover px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-14 text-gold">
-        <div className="mx-auto flex max-w-md items-center justify-between gap-3">
-          <div>
-            <p className="font-mono text-[0.7rem] tracking-[0.3em] uppercase">Passport</p>
-            <h1 className="font-serif text-xl leading-tight">Postcards from Singapore</h1>
-          </div>
-          <div className="rounded-2xl bg-paper">
-            <SyncPill />
-          </div>
+        <div className="mx-auto max-w-md">
+          <p className="font-mono text-[0.7rem] tracking-[0.3em] uppercase">Passport</p>
+          <h1 className="font-serif text-xl leading-tight">Postcards from Singapore</h1>
         </div>
       </header>
 
@@ -40,6 +34,23 @@ export function Passport() {
         )}
 
         <PhotoPage student={student} event={event} />
+
+        {loadError && (
+          <div role="alert" className="rounded-xl border border-accent/40 bg-accent/10 p-4">
+            <p className="font-medium">Couldn't load your stamps. Check your mobile data.</p>
+            <button
+              onClick={async () => {
+                setRetrying(true)
+                await reload()
+                setRetrying(false)
+              }}
+              disabled={retrying}
+              className="mt-3 min-h-12 rounded-xl border-2 border-accent px-5 font-semibold text-accent"
+            >
+              {retrying ? 'Trying…' : 'Try again'}
+            </button>
+          </div>
+        )}
 
         <section aria-labelledby="stamps-h">
           <div className="mb-3 flex items-end justify-between">
@@ -72,9 +83,7 @@ export function Passport() {
                   >
                     <Stamp def={def} inked={!!sub} className="w-full max-w-36" />
                     <span className="mt-2 font-semibold leading-snug">{def.title}</span>
-                    <span className="text-sm text-ink-soft">
-                      {sub ? (sub.sync === 'synced' ? 'Collected ✓' : 'Collected · saved on phone') : 'Tap to start'}
-                    </span>
+                    <span className="text-sm text-ink-soft">{sub ? 'Collected ✓' : 'Tap to start'}</span>
                   </Link>
                 </li>
               )
@@ -86,7 +95,7 @@ export function Passport() {
           <h2 className="font-serif text-xl">{allDone ? 'Postcard unlocked!' : 'Postcard maker'}</h2>
           <p className="mt-1 text-ink-soft">
             {allDone
-              ? "You've collected every stamp. The postcard maker arrives in the next build (M3)."
+              ? "You've collected every stamp. The postcard maker arrives in M3."
               : `Collect all ${stamps.length} stamps to turn your favourite moment into a postcard to send home.`}
           </p>
         </section>
@@ -95,24 +104,23 @@ export function Passport() {
           {confirmLeave ? (
             <div className="space-y-3 rounded-2xl border border-rule p-4">
               <p>
-                This removes your passport from this phone. You can get it back any time by entering your student ID and
-                first name again. Anything not yet synced will still upload.
+                This logs you out on this phone. Your stamps are saved, and you can get back in any time with your student ID
+                and first name.
               </p>
               <div className="flex justify-center gap-3">
                 <button onClick={() => setConfirmLeave(false)} className="min-h-12 rounded-xl border border-rule px-5 font-semibold">
                   Cancel
                 </button>
-                <button onClick={() => void leave()} className="min-h-12 rounded-xl bg-accent px-5 font-semibold text-white dark:text-paper">
-                  Leave this phone
+                <button onClick={leave} className="min-h-12 rounded-xl bg-accent px-5 font-semibold text-white dark:text-paper">
+                  Log out
                 </button>
               </div>
             </div>
           ) : (
             <button onClick={() => setConfirmLeave(true)} className="min-h-12 px-3 underline">
-              Not {student.firstName}? Leave this phone
+              Not {student.firstName}? Log out
             </button>
           )}
-          {api.demo && <p className="mt-3">Demo mode: data stays on this phone.</p>}
         </section>
       </div>
     </main>

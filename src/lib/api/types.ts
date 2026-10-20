@@ -1,4 +1,4 @@
-import type { EventInfo, JoinResult, Submission } from '../types'
+import type { EventInfo, JoinResult, StampKey, Student, Submission } from '../types'
 
 export interface JoinInput {
   eventCode: string
@@ -7,19 +7,19 @@ export interface JoinInput {
   country: string
 }
 
-/** Everything the app needs from the backend. M1 uses an in-browser demo server; M2 swaps in Supabase. */
-export interface Api {
-  /** True for the in-browser demo server (data never leaves this phone). */
-  readonly demo: boolean
-  joinEvent(input: JoinInput): Promise<JoinResult>
-  /** Latest event details (organisers can edit the seasonal stamp). Null when unreachable. */
-  fetchEvent(eventId: string): Promise<EventInfo | null>
-  /** Upload one submission. Idempotent: retries with the same id never duplicate. Throws when offline. */
-  pushSubmission(sub: Submission): Promise<void>
+export interface SaveInput {
+  stampKey: StampKey
+  /** A new photo, or null to keep the photo already saved for this stamp. */
+  photo: Blob | null
+  reflection: string
 }
 
-export class OfflineError extends Error {
-  constructor() {
-    super('No connection')
-  }
+/** Everything the app needs from the backend. */
+export interface Api {
+  joinEvent(input: JoinInput): Promise<JoinResult>
+  /** Latest event details (organisers can edit the seasonal stamp in Supabase). */
+  fetchEvent(eventId: string): Promise<EventInfo | null>
+  fetchSubmissions(student: Student): Promise<Submission[]>
+  /** Save one stamp. Throws if the upload fails, so the screen can offer "Try again". */
+  saveSubmission(student: Student, input: SaveInput): Promise<Submission>
 }
